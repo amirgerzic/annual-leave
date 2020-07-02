@@ -28,6 +28,9 @@ class Header extends Component {
     document.body.appendChild(node);
   }
   render() {
+    if(!localStorage.usertoken){
+      this.props.history.push('/login')
+    }
     return (
       <Navbar fluid>
         <Navbar.Header>
@@ -37,7 +40,7 @@ class Header extends Component {
           <Navbar.Toggle onClick={this.mobileSidebarToggle} />
         </Navbar.Header>
         <Navbar.Collapse>
-          <AdminNavbarLinks />
+          <AdminNavbarLinks/>
         </Navbar.Collapse>
       </Navbar>
     );

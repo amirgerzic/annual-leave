@@ -1,29 +1,39 @@
 import React, { Component } from "react";
 import { Grid, Row, Col } from "react-bootstrap";
-import Card from "components/Card/Card"
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import ModalForm from "components/Modal/ModalForm"
 
 class Dashboard extends Component {
-  createLegend(json) {
-    var legend = [];
-    for (var i = 0; i < json["names"].length; i++) {
-      var type = "fa fa-circle text-" + json["types"][i];
-      legend.push(<i className={type} key={i} />);
-      legend.push(" ");
-      legend.push(json["names"][i]);
-    }
-    return legend;
+  constructor(props){
+    super(props)
+    this.state = {
+    date: new Date(),
+    addModalShow: false
   }
+  this.onChange = this.onChange.bind(this)
+  }
+  
+  onChange(date){
+    this.setState({ date })
+    this.setState({addModalShow: true})
+    console.log(date)
+  }
+
+
   render() {
+    let addModalClose =() => this.setState({addModalShow:false})
     return (
       <div className="content">
         <Grid fluid>
-          <Row>
-            <Col md="6">
-            <Card>
-            </Card>
+          <Row >
+            <Col md={6} mdOffset={3}>
+           <Calendar 
+          onChange={this.onChange}
+          value={this.state.date}
+        />
+<ModalForm show={this.state.addModalShow} onHide={addModalClose} />
             </Col>
-      <Col md="6"><Card></Card></Col>
-            
           </Row>
         </Grid>
       </div>

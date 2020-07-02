@@ -11,12 +11,13 @@ function FieldGroup({ label, ...props }) {
 }
 
 export class FormInputs extends Component {
+  
   render() {
     var row = [];
     for (var i = 0; i < this.props.ncols.length; i++) {
       row.push(
         <div key={i} className={this.props.ncols[i]}>
-          <FieldGroup {...this.props.properties[i]} />
+          <FieldGroup onChange={this.onChange} {...this.props.properties[i]} />
         </div>
       );
     }

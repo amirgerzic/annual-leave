@@ -15,7 +15,6 @@ users.post('/register', (req, res) => {
       username: req.body.username,
       password: req.body.password,
     }
-    console.log(userData.password);
     User.findOne({
       username: req.body.username
     })
@@ -41,19 +40,22 @@ users.post('/register', (req, res) => {
   })
   
   users.post('/login', (req, res) => {
+    console.log(req.body.username," + ",req.body.password)
     User.findOne({
       username: req.body.username
     })
       .then(user => {
+        console.log(req.body.username)
         if (user) {
           if (bcrypt.compareSync(req.body.password, user.password)) {
+            console.log(user.password)
             const payload = {
               _id: user._id,
               name: user.name,
               username: user.username
             }
             let token = jwt.sign(payload, process.env.SECRET_KEY, {
-              expiresIn: 1440
+              expiresIn: 600
             })
             res.send(token)
           } else {

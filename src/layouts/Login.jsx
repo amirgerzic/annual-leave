@@ -1,29 +1,45 @@
 import React, { Component } from "react";
 
+import { login } from "../components/UserFunctions/UserFunctions.js"
 import LoginNavbar from "components/Navbars/LoginNavbar";
 import {
   Grid,
   Row,
-  Col
+  Col,
+  ControlLabel,
 } from "react-bootstrap";
 
 import { Card } from "components/Card/Card.jsx";
-import { FormInputs } from "components/FormInputs/FormInputs.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
-import image from "assets/img/sidebar-3.jpg";
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      _notificationSystem: null,
-      image: image,
-      color: "black",
-      hasImage: true,
-      fixedClasses: "dropdown show-dropdown open"
+      username: '',
+      password: '',
     };
+    this.onChange = this.onChange.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value })
+  }
+
+  onSubmit(e) {
+    e.preventDefault()
+    const user = {
+      username: this.state.username,
+      password: this.state.password
+    }
+    login(user).then(res => {
+      console.log(res.error)
+      if (res.error === undefined) {
+        this.props.history.push('/admin')
+      }
+    })
+  }
   render() {
     return (
       <div className="wrapper">
@@ -35,30 +51,28 @@ class Login extends Component {
                 <Card
                   title="Login"
                   content={
-                    <form >
-                      <FormInputs
-                        ncols={["col-md-12"]}
-                        properties={[
-                          {
-                            label: "Username",
-                            type: "text",
-                            bsClass: "form-control",
-                            placeholder: "Username"
-                          }
-                        ]}
+                    <form noValidate onSubmit={this.onSubmit}>
+                      <ControlLabel>Username</ControlLabel>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="username"
+                        placeholder="Username"
+                        value={this.state.username}
+                        onChange={this.onChange}
                       />
-                      <FormInputs
-                        ncols={["col-md-12"]}
-                        properties={[
-                          {
-                            label: "Password",
-                            type: "text",
-                            bsClass: "form-control",
-                            placeholder: "Password",
-                          }
-                        ]}
+                      <br></br>
+                      <ControlLabel>Password</ControlLabel>
+                      <input
+                        type="password"
+                        className="form-control"
+                        name="password"
+                        placeholder="Password"
+                        value={this.state.password}
+                        onChange={this.onChange}
                       />
-                      <Button bsStyle="info" pullCenter fill type="submit">
+                      <br></br>
+                      <Button bsStyle="info" pullRight fill type="submit">
                         Login
                     </Button>
                       <div className="clearfix" />

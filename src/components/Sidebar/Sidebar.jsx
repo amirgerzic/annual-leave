@@ -59,7 +59,7 @@ class Sidebar extends Component {
             {this.props.routes.map((prop, key) => {
               if (!prop.redirect)
                 return (
-                  <li>
+                  <li key={key}>
                     <NavLink
                       to={prop.layout + prop.path}
                       className="nav-link"
