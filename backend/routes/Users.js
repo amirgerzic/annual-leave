@@ -12,8 +12,12 @@ process.env.SECRET_KEY = 'secret'
 users.post('/register', (req, res) => {
     const userData = {
       name: req.body.name,
+      jobDescription: req.body.jobDescription,
       username: req.body.username,
       password: req.body.password,
+      daysAvailable: req.body.daysAvailable,
+      typeOfUser: req.body.typeOfUser,
+      status: req.body.status
     }
     User.findOne({
       username: req.body.username
@@ -40,7 +44,6 @@ users.post('/register', (req, res) => {
   })
   
   users.post('/login', (req, res) => {
-    console.log(req.body.username," + ",req.body.password)
     User.findOne({
       username: req.body.username
     })
@@ -48,11 +51,11 @@ users.post('/register', (req, res) => {
         console.log(req.body.username)
         if (user) {
           if (bcrypt.compareSync(req.body.password, user.password)) {
-            console.log(user.password)
             const payload = {
               _id: user._id,
               name: user.name,
-              username: user.username
+              username: user.username,
+              typeOfUser: user.typeOfUser
             }
             let token = jwt.sign(payload, process.env.SECRET_KEY, {
               expiresIn: 600
@@ -69,6 +72,23 @@ users.post('/register', (req, res) => {
         res.send('error: ' + err)
       })
   })
+
+  users.get('/userData', (req, res) => {
+    User.find({ 
+      typeOfUser: 'user'
+    })
+      .then(user => {
+        if (user) {
+          res.json(user)
+        } else {
+          res.send('User does not exist')
+        }
+      })
+      .catch(err => {
+        res.send('error: ' + err)
+      })
+  })
+  
   
   users.get('/profile', (req, res) => {
     var decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)

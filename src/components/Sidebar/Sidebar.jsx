@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 
-import AdminNavbarLinks from "../Navbars/AdminNavbarLinks.jsx";
+import NavbarLinks from "../Navbars/NavbarLinks.jsx";
 
 import logo from "assets/img/reactlogo.png";
+
+const jwtDecode = require('jwt-decode');
 
 class Sidebar extends Component {
   constructor(props) {
@@ -55,10 +57,14 @@ class Sidebar extends Component {
         </div>
         <div className="sidebar-wrapper">
           <ul className="nav">
-            {this.state.width <= 991 ? <AdminNavbarLinks /> : null}
+            {this.state.width <= 991 ? <NavbarLinks /> : null}
             {this.props.routes.map((prop, key) => {
-              if (!prop.redirect)
-                return (
+              if (!prop.redirect){
+                const token = localStorage.getItem('usertoken')
+                var decoded = jwtDecode(token)
+                
+                if(prop.layout === "/"+decoded.typeOfUser){
+                  return (
                   <li key={key}>
                     <NavLink
                       to={prop.layout + prop.path}
@@ -69,7 +75,9 @@ class Sidebar extends Component {
                       <p>{prop.name}</p>
                     </NavLink>
                   </li>
-                );
+                );}
+                
+              }
               return null;
             })}
           </ul>

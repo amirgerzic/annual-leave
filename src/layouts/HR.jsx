@@ -1,18 +1,22 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
+import NotificationSystem from "react-notification-system";
 
 import Navbar from "components/Navbars/Navbar";
 import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
 
+import { style } from "variables/Variables.jsx";
+
 import routes from "routes.js";
 
 import image from "assets/img/sidebar-3.jpg";
 
-class Admin extends Component {
+class HR extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      _notificationSystem: null,
       image: image,
       color: "black",
       hasImage: true,
@@ -21,13 +25,14 @@ class Admin extends Component {
    
   getRoutes = routes => {
     return routes.map((prop, key) => {
-      if (prop.layout === '/admin') {
+      if (prop.layout === '/hr') {
         return (
           <Route
-          path={prop.layout + prop.path}
+            path={prop.layout + prop.path}
             render={props => (
               <prop.component
                 {...props}
+                handleClick={this.handleNotificationClick}
               />
             )}
             key={key}
@@ -63,6 +68,7 @@ class Admin extends Component {
   render() {
     return (
       <div className="wrapper">
+        <NotificationSystem ref="notificationSystem" style={style} />
         <Sidebar {...this.props} routes={routes} image={this.state.image}
         color={this.state.color}
         hasImage={this.state.hasImage}/>
@@ -79,4 +85,4 @@ class Admin extends Component {
   }
 }
 
-export default Admin;
+export default HR;

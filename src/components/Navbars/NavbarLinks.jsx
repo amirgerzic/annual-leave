@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { NavItem, Nav} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
 
-class AdminNavbarLinks extends Component {
+class NavbarLinks extends Component {
 
   logOut(e) {
     e.preventDefault()
@@ -23,4 +23,4 @@ class AdminNavbarLinks extends Component {
   }
 }
 
-export default withRouter(AdminNavbarLinks);
+export default withRouter(NavbarLinks);

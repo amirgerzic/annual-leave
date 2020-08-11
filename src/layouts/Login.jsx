@@ -12,6 +12,8 @@ import {
 import { Card } from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 
+const jwtDecode = require('jwt-decode');
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -34,9 +36,18 @@ class Login extends Component {
       password: this.state.password
     }
     login(user).then(res => {
+      const token = localStorage.getItem('usertoken')
       console.log(res.error)
       if (res.error === undefined) {
-        this.props.history.push('/admin')
+        var decoded = jwtDecode(token)
+        console.log(decoded)
+        if(decoded.typeOfUser === 'user'){
+          this.props.history.push('/user')
+        }else if(decoded.typeOfUser === 'admin'){
+          this.props.history.push('/admin')
+        }else if(decoded.typeOfUser === 'hr'){
+          this.props.history.push('/hr')
+        }
       }
     })
   }
@@ -47,9 +58,9 @@ class Login extends Component {
         <div className="content">
           <Grid fluid>
             <Row>
-              <Col md={4} className="justify-content-md-center">
+              <Col mdOffset={4} md={4} className="justify-content-md-center">
                 <Card
-                  title="Login"
+                  title="Request a Leave"
                   content={
                     <form noValidate onSubmit={this.onSubmit}>
                       <ControlLabel>Username</ControlLabel>
