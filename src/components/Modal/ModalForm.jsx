@@ -1,74 +1,165 @@
 import React, { Component } from "react";
-import { Modal, ControlLabel } from "react-bootstrap";
+import {
+    Modal,
+    Row,
+    Col,
+    FormControl,
+    ControlLabel
+} from "react-bootstrap";
 import Button from "components/CustomButton/CustomButton";
-import { Form, TextArea, Select } from 'semantic-ui-react'
-import 'bootstrap/dist/css/bootstrap.css';
-import 'semantic-ui-css/semantic.min.css'
-import { request } from "../UserFunctions/UserFunctions.js"
+import Select from 'react-select'
+import { updateUser } from "components/UserFunctions/UserFunctions.js"
 
 const options = [
-    { key: '1', value: 'sick', text: 'Sick Leave' },
-    { key: '2', value: 'vacation', text: 'Vacation' },
-    { key: '4', value: 'hometime', text: 'Hometime' },
-    { key: '3', value: 'other', text: 'Other' },
+    { value: 'user', label: 'Employee' },
+    { value: 'hr', label: 'Human Resourses' }
 ]
 class ModalForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            reason: '',
-            additionalInfo: '',
+            name: '',
+            jobDescription: '',
+            username: '',
+            password: '',
+            daysAvailable: '',
+            typeOfUser: ''
         };
         this.onChange = this.onChange.bind(this)
+        this.onChangeSelect = this.onChangeSelect.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
     }
 
     onChange(e) {
         this.setState({ [e.target.name]: e.target.value })
+        console.log(this.props.data._id)
+    }
+
+    onChangeSelect(e) {
+        this.setState({ typeOfUser: e.value })
+        //  console.log(this.state.name)
+        //  userDataById(user).then(res => {
+        //      console.log(res.data)
+        //  })
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({name: nextProps.data.name})
+        this.setState({username: nextProps.data.username})
+        this.setState({password: nextProps.data.password})
+        this.setState({jobDescription: nextProps.data.jobDescription})
+        this.setState({daysAvailable: nextProps.data.daysAvailable})
+        this.setState({typeOfUser: nextProps.data.typeOfUser})
     }
 
     onSubmit(e) {
         e.preventDefault()
-        const leave = {
-            reason: this.state.reason,
-            additionalInfo: this.state.additionalInfo
+        const user = {
+            _id: this.props.data._id,
+            name: this.state.name,
+            jobDescription: this.state.jobDescription,
+            username: this.state.username,
+            password: this.state.password,
+            daysAvailable: this.state.daysAvailable,
+            typeOfUser: this.state.typeOfUser,
         }
-        request(leave).then(res => {
-            console.log(res.error)
-          })
+        updateUser(user).then(res => {
+            console.log(res)
+            window.location.reload(false)
+        })
     }
+
     render() {
 
         return (
             <Modal
                 {...this.props}
-                size="lg"
+                size="sm"
                 backdrop="static"
                 keyboard={false}
-                aria-labelledby="contained-modal-title-vcenter"
+                aria-labelledby="example-modal-sizes-title-sm"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Request a Leave
-                    </Modal.Title>
+                    <Modal.Title id="example-modal-sizes-title-sm">
+                        Update Request
+                </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={this.onSubmit}>
-                        <ControlLabel>Reason</ControlLabel>
+                    <form noValidate onSubmit={this.onSubmit}>
+
+                        <Row>
+                            <Col md={6}>
+                                <ControlLabel>Username</ControlLabel>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="username"
+                                    placeholder="Username"
+                                    value={this.state.username}
+                                    onChange={this.onChange}
+                                />
+                            </Col>
+                            <Col md={6}>
+                                <ControlLabel>Password</ControlLabel>
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    name="password"
+                                    placeholder="Password"
+                                    value={this.state.password}
+                                    onChange={this.onChange}
+                                />
+                            </Col>
+                        </Row>
+
+
+                        <ControlLabel>Name</ControlLabel>
+                        <input
+                            type="text"
+                            className="form-control"
+                            name="name"
+                            placeholder="Full Name"
+                            value={this.state.name}
+                            onChange={this.onChange}
+                        />
+                        <ControlLabel>Job description</ControlLabel>
+                        <FormControl
+                            rows="5"
+                            componentClass="textarea"
+                            bsClass="form-control"
+                            name="jobDescription"
+                            placeholder="Job Decription"
+                            value={this.state.jobDescription}
+                            onChange={this.onChange}
+                        />
+                        <Row>
+                            <Col md={6}>
+                                <ControlLabel>Days</ControlLabel>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    name="daysAvailable"
+                                    placeholder="Days Available"
+                                    value={this.state.daysAvailable}
+                                    onChange={this.onChange}
+                                />
+                            </Col>
+                            <Col md={6}>
+                                <ControlLabel>Type</ControlLabel>
+                                <Select
+                                    placeholder={this.state.typeOfUser}
+                                    onChange={this.onChangeSelect}
+                                    options={options}
+                                />
+                            </Col>
+                        </Row>
                         <br></br>
-                        <Select
-                        onChange={this.onChange} placeholder='Select Reason for leave' options={options} />
-                        <br></br>
-                        <br></br>
-                        <ControlLabel>Additional Info</ControlLabel>
-                        <TextArea
-                        onChange={this.onChange} placeholder='Tell us more' />
-                    </Form>
+                        <Button bsStyle="info" pullRight fill type="submit">
+                            Update
+                    </Button>
+                        <div className="clearfix" />
+                    </form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button bsStyle="primary" fill type="submit" onClick={this.props.onHide}>Request</Button>
-                    <Button bsStyle="danger" fill onClick={this.props.onHide}>Close</Button>
-                </Modal.Footer>
             </Modal>
         )
     }

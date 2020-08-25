@@ -1,9 +1,9 @@
 import Dashboard from "views/Dashboard.jsx";
-import UserProfile from "views/UserProfile.jsx";
+import UserList from "views/UserList.jsx";
 import CreateUser from "views/CreateUser.jsx";
-import TableList from "views/TableList.jsx";
-import UserTableList from "views/UsersTableList.jsx";
-import Notifications from "views/Notifications.jsx";
+import RequestTable from "views/RequestTable.jsx";
+import Requests from "views/Requests.jsx";
+import EmployeeTable from "views/EmployeeTable.jsx";
 
 const dashboardRoutes = [
   {
@@ -14,13 +14,6 @@ const dashboardRoutes = [
     layout: "/user"
   },
   {
-    path: "/user",
-    name: "User Profile",
-    icon: "pe-7s-user",
-    component: UserProfile,
-    layout: "/admin"
-  },
-  {
     path: "/createUser",
     name: "Create User",
     icon: "pe-7s-user",
@@ -28,24 +21,31 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/table",
-    name: "Table List",
+    path: "/user",
+    name: "User List",
+    icon: "pe-7s-user",
+    component: UserList,
+    layout: "/admin"
+  },
+  {
+    path: "/requestTable",
+    name: "Request List",
     icon: "pe-7s-note2",
-    component: TableList,
+    component: RequestTable,
     layout: "/hr"
   },
   {
-    path: "/userTable",
-    name: "User Table List",
+    path: "/request",
+    name: "Request List",
     icon: "pe-7s-note2",
-    component: UserTableList,
-    layout: "/hr"
+    component: Requests,
+    layout: "/user"
   },
   {
-    path: "/notifications",
-    name: "Notifications",
-    icon: "pe-7s-bell",
-    component: Notifications,
+    path: "/employeeTable",
+    name: "Employee List",
+    icon: "pe-7s-note2",
+    component: EmployeeTable,
     layout: "/hr"
   }
 ];

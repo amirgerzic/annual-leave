@@ -8,11 +8,13 @@ requests.use(cors())
 
 requests.post('/request', (req, res) => {
   const requestData = {
-    employee: req.body.employee,
+    name: req.body.name,
+    employeeId: req.body.employeeId,
     reason: req.body.reason,
+    daysOff: req.body.daysOff,
     additionalInfo: req.body.additionalInfo,
     date: req.body.date,
-    status: "PENDING"
+    status: req.body.status
   }
   Request.findOne({
     employeeId: req.body.employeeId
@@ -21,6 +23,7 @@ requests.post('/request', (req, res) => {
       Request.findOne({
         date: req.body.date
       }).then(date => {
+        console.log(date)
         if (!date) {
           Request.create(requestData)
             .then(request => {
@@ -31,12 +34,13 @@ requests.post('/request', (req, res) => {
             })
         } else {
           Request.findOne({
-            status: req.body.date
+            status: req.body.status
           }).then(status => {
-            if (status !== "DENIED" || status !== "APPROVED") {
+            console.log(status.status)
+            if (status.status == "DENIED") {
               Request.create(requestData)
                 .then(request => {
-                  res.json({ status: request.reason + 'Request Sent!' })
+                  res.json({ status: request.reason + ' Request Sent!' })
                 })
                 .catch(err => {
                   res.send('error: ' + err)
@@ -50,7 +54,7 @@ requests.post('/request', (req, res) => {
     } else {
       Request.create(requestData)
         .then(request => {
-          res.json({ status: request.reason + 'Request Sent!' })
+          res.json({ status: request.reason + 'Reequest Sent!' })
         })
         .catch(err => {
           res.send('error: ' + err)
@@ -76,13 +80,55 @@ requests.get('/requestData', (req, res) => {
     })
 })
 
-requests.put('/updateStatus', (req, res) => {
-  const updateData = {
-    $set: { status: req.body.status }
-  }
-  Request.findByIdAndUpdate(req.body._id, updateData)
-    .then(_id => {
-      res.send(_id + ' Status Updated to '+req.body.status)
+requests.get('/requestDataByEmployeeId', (req, res) => {
+  Request.find({
+    employeeId: req.query.employeeId,
+  })
+    .then(request => {
+      if (request) {
+        res.json(request)
+      } else {
+        res.send('Request does not exist')
+      }
+    })
+    .catch(err => {
+      res.send('error: ' + err)
     })
 })
+
+requests.put('/updateStatus', (req, res) => {
+  Request.findById({
+    _id: req.body._id
+  }).then(request =>{
+    const updateData = {
+        $set: { status: req.body.status }
+      }
+    if(request.status ==="PENDING"){
+      
+      Request.findByIdAndUpdate(req.body._id, updateData)
+        .then(_id => {
+          res.send('Request Updated')
+        })
+    }
+    else if(request.status === req.body.status){
+      res.send('Request already '+req.body.status)
+    }else(
+      Request.findByIdAndUpdate(req.body._id, updateData)
+        .then(_id => {
+          res.send('Request Updated')
+        })
+    )
+  })
+})
+
+requests.delete('/delete', (req, res) => {
+  console.log(req.query._id)
+  Request.findByIdAndDelete({
+    _id: req.query._id
+  })
+    .then(
+        res.json('Request deleted')
+    )
+})
+
 module.exports = requests

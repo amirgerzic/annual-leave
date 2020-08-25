@@ -3,37 +3,43 @@ import { Modal, Row, Col } from "react-bootstrap";
 import Button from "components/CustomButton/CustomButton";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'semantic-ui-css/semantic.min.css'
-import { status } from "components/UserFunctions/UserFunctions.js"
+import { status, daysAvailable } from "components/UserFunctions/UserFunctions.js"
 
 class ModalForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: ''
+
         };
-        this.onClick = this.onClick.bind(this)
         this.onChange = this.onChange.bind(this)
     }
 
-    onClick(e) {
-        this.setState({ status: e.target.value})
-        this.onChange(e)
-    }
-    onChange(){
-        console.log(this.state.status)
+    onChange(e) {
+        console.log(this.props.value)
+        console.log(this.props.status)
         const update = {
-            _id: this.props.value,
-            status: this.state.status
+            _id: this.props.id,
+            status: e.target.value
+        }
+        const data = {
+            _id: this.props.employeeId,
+            daysOff: this.props.value,
+            status: e.target.value
         }
         status(update).then(res => {
-            
+            console.log(res)
+            if (res === "Request Updated") {
+                daysAvailable(data).then(res => {
+
+                })
+            }
         })
     }
     render() {
         return (
             <Modal
                 {...this.props}
-                size="sm"
+                bsSize="sm"
                 backdrop="static"
                 keyboard={false}
                 aria-labelledby="example-modal-sizes-title-sm"
@@ -45,12 +51,10 @@ class ModalForm extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Row>
-                        <Col mdOffset={2} md={3}>
-                            <Button bsStyle="success" fill  value= "APPROVED"
-                                onClick={this.onClick}>Approve</Button>
-                        </Col>
-                        <Col mdOffset={2} md={3}>
-                            <Button bsStyle="danger" fill value= "DENIED" onClick={this.onClick}>Deny</Button>
+                        <Col md={12}>
+                            <Button bsStyle="success" fill value="APPROVED"
+                                onClick={this.onChange}>Approve</Button>
+                            <Button bsStyle="danger" fill pullRight value="DENIED" onClick={this.onChange}>Deny</Button>
                         </Col>
                     </Row>
                 </Modal.Body>

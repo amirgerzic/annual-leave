@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  Modal,
   Grid,
   Row,
   Col,
@@ -14,7 +15,6 @@ import { Card } from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Select from 'react-select'
 
-
 const options = [
   { value: 'user', label: 'Employee' },
   { value: 'hr', label: 'Human Resourses' }
@@ -24,28 +24,29 @@ class CreateUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      addModalShow: false,
       name: '',
       jobDescription: '',
       username: '',
       password: '',
       daysAvailable: '',
       typeOfUser: '',
-      status: 'Work'
+      daysUsed: '0',
     };
     this.onChange = this.onChange.bind(this)
     this.onChangeSelect = this.onChangeSelect.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    this.addModalClose = this.addModalClose.bind(this)
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value })
   }
   onChangeSelect(e) {
-    this.setState({typeOfUser: e.value})
+    this.setState({ typeOfUser: e.value })
   }
 
   onSubmit(e) {
-    console.log(this.state.typeOfUser)
     e.preventDefault()
     const user = {
       name: this.state.name,
@@ -56,9 +57,14 @@ class CreateUser extends Component {
       typeOfUser: this.state.typeOfUser,
       status: this.state.status
     }
+   // this.setState({ addModalShow: true })
     register(user).then(res => {
-      console.log(res.error)
+      console.log(res)
     })
+  }
+  addModalClose() {
+    this.setState({ addModalShow: false })
+    window.location.reload(true)
   }
   render() {
     return (
@@ -130,11 +136,11 @@ class CreateUser extends Component {
                       </Col>
                       <Col md={6}>
                         <ControlLabel>Type</ControlLabel>
-                        <Select className="form-control"
-                        placeholder="Select type Of User"
-                        onChange={this.onChangeSelect}
-                        options={options}
-                      />
+                        <Select
+                          placeholder="Select type Of User"
+                          onChange={this.onChangeSelect}
+                          options={options}
+                        />
                       </Col>
                     </Row>
                     <br></br>
@@ -146,6 +152,18 @@ class CreateUser extends Component {
                 }
               />
             </Col>
+            <Modal show={this.state.addModalShow} onHide={this.addModalClose}
+              bsSize="small"
+              backdrop="static"
+              keyboard={false}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title id="example-modal-sizes-title-sm">
+                  User Created
+                </Modal.Title>
+              </Modal.Header>
+              
+            </Modal>
           </Row>
         </Grid>
       </div>

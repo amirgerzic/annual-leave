@@ -1,27 +1,32 @@
 const mongoose = require("mongoose")
+const { Int32 } = require("mongodb")
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
     name: {
-        type: String
+        type: String,
+        required: true
     },
     jobDescription: {
-        type: String
+        type: String,
     },
     username: {
-        type: String
+        type: String,
+        required: true
     },
     password: {
-        type: String
+        type: String,
+        required: true
     },
     daysAvailable: {
-        type: String
+        type: Number
     },
     typeOfUser: {
-        type: String
+        type: String,
+        required: true
     },
-    status: {
-        type: String
+    daysUsed: {
+        type: Number
     }
 })
 

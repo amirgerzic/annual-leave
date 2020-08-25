@@ -4,27 +4,45 @@ import DataTable from 'react-data-table-component';
 import Button from 'components/CustomButton/CustomButton'
 import ModalActionBox from "components/Modal/ModalActionBox"
 import Card from "components/Card/Card.jsx";
+import { requestDataById, deleteRequest } from "../components/UserFunctions/UserFunctions.js"
 
-class TableList extends Component {
+const jwtDecode = require('jwt-decode');
+
+class Requests extends Component {
   constructor(props) {
     super(props);
     this.state = {
         requests: [],
-        addModalShow: false
+        addModalShow: false,
+        selectedRow:'',
+        daysOff: '',
+        employeeId: ''
     }
     this.onChange = this.onChange.bind(this)
+    this.onChangeDelete = this.onChangeDelete.bind(this)
   }
-  onChange(){
+  onChange(e){
+    this.setState({selectedRow: e.target.id})
+    this.setState({daysOff: e.target.value})
+    this.setState({employeeId: e.target.name})
     this.setState({addModalShow: true})
-    
+  }
+  onChangeDelete(e) {
+    deleteRequest(e.target.id).then(res =>{
+      console.log(res)
+      window.location.reload(false)
+    })
   }
 
+
   async componentDidMount(){
-    const url = "http://localhost:4000/requests/requestData"
-    const response = await fetch(url)
-    const data = await response.json()
-    this.setState({requests: data})
-    console.log(this.state.requests[0]._id)
+    const token = localStorage.getItem('usertoken')
+        var decoded = jwtDecode(token)
+        const employeeId = decoded._id
+        console.log(decoded._id)
+        requestDataById(employeeId).then(res => {
+            this.setState({ requests: res })
+        })
   }
   render() {
     let addModalClose =() => this.setState({addModalShow:false})
@@ -38,18 +56,13 @@ class TableList extends Component {
                 ctTableResponsive
                 content={
                   <DataTable
-                    selectableRows
+                 // onRowSelected={this.onChangeSelectedRow}
                     pagination
                     title="Leave Requests"
                     columns={[
                       {
-                        name: 'Request ID',
-                        selector: '_id',
-                        sortable: true,
-                      },
-                      {
-                        name: 'Employee ID',
-                        selector: 'employeeId',
+                        name: 'Employee Name',
+                        selector: 'name',
                         sortable: true,
                       },
                       {
@@ -77,20 +90,25 @@ class TableList extends Component {
                         right: true,
                       },
                       {
-                        name: 'Action',
-                        selector: 'action',
-                        cell: () => <Button value={this.state.requests[0]._id}bsStyle="info" onClick={this.onChange}>Action</Button>,
-                        ignoreRowClick: true,
-                        allowOverflow: true,
-                        button: true,
+                        name: 'Days Off',
+                        selector: 'daysOff',
+                        sortable: true,
+                        right: true,
                       },
+                      {
+                        name: 'Delete',
+                        selector: '_id',
+                        cell: row => <Button bsStyle="danger" id={row._id} onClick={this.onChangeDelete}>Delete</Button>,
+                        ignoreRowClick: true,
+                        button: true,
+                      }
                     ]}
                     data={this.state.requests}
                   />
                 }
               />
             </Col>
-            <ModalActionBox data={this.state.requests[0]} show={this.state.addModalShow} onHide={addModalClose} />
+            <ModalActionBox employeeId={this.state.employeeId} value={this.state.daysOff} id={this.state.selectedRow} show={this.state.addModalShow} onHide={addModalClose} />
           </Row>
         </Grid>
       </div>
@@ -98,4 +116,4 @@ class TableList extends Component {
   }
 }
 
-export default TableList;
+export default Requests;

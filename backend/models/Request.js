@@ -2,7 +2,11 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 const RequestSchema = new Schema({
-    employee: {
+    employeeId: {
+        type: String,
+        required: true
+    },
+    name: {
         type: String,
         required: true
     },
@@ -15,6 +19,10 @@ const RequestSchema = new Schema({
     },
     date: {
         type: String,
+        required: true
+    },
+    daysOff: {
+        type: Number,
         required: true
     },
     status: {
