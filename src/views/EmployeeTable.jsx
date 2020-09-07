@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { Grid, Row, Col } from "react-bootstrap";
 import DataTable from 'react-data-table-component';
 import Card from "components/Card/Card.jsx";
-import Table from "components/Table.jsx"
-import Button from 'components/CustomButton/CustomButton'
 
 class EmployeeTable extends Component {
   constructor(props) {
@@ -14,13 +12,6 @@ class EmployeeTable extends Component {
       selectedEmployee: ''
     }
     this.onChange = this.onChange.bind(this)
-    this.onChangeSelectedRow = this.onChangeSelectedRow.bind(this)
-  }
- onChangeSelectedRow(e){
-   console.log('selected')
-   console.log(e.selectedRows._id)
-   console.log(e.selectedRows)
-    this.setState({selectedEmployee: e.selectedRows})
   }
   onChange(e) {
     this.setState({ selectedRow: e.target.id })
@@ -53,14 +44,13 @@ class EmployeeTable extends Component {
                         sortable: true,
                       },
                       {
-                        name: 'Job Desc',
-                        selector: 'jobDescription',
+                        name: 'Employee Username',
+                        selector: 'username',
                         sortable: true,
-                        right: true,
                       },
                       {
-                        name: 'Status',
-                        selector: 'status',
+                        name: 'Job Title',
+                        selector: 'jobTitle',
                         sortable: true,
                         right: true,
                       },
@@ -75,22 +65,12 @@ class EmployeeTable extends Component {
                         selector: 'daysUsed',
                         sortable: true,
                         right: true,
-                      },
-                      {
-                        name: 'Edit',
-                        selector: '_id',
-                        id: '_id',
-                        cell: row => <Button bsStyle="info" id={row._id} onClick={this.onChange}>Edit</Button>,
-                        ignoreRowClick: true,
-                        allowOverflow: true,
-                        button: true,
                       }
                     ]}
                     data={this.state.employees}
-                    onSelectedRowsChange={this.onChangeSelectedRow}
-                    selectableRows
-                    expandableRows
-                    expandableRowsComponent={<Table id={this.state.selectedRow}></Table>}
+                    // selectableRows
+                    // expandableRows
+                    // expandableRowsComponent={<Table id={this.state.selectedRow}></Table>}
                   />
                 }
               />

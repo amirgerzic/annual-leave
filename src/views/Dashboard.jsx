@@ -12,11 +12,16 @@ import Button from "components/CustomButton/CustomButton.jsx";
 import Select from 'react-select'
 import Datepicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
-
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { request } from "../components/UserFunctions/UserFunctions.js"
-import { format, compareAsc } from 'date-fns'
+import { format } from 'date-fns'
+import { Formik, Form, ErrorMessage } from 'formik'
+import * as Yup from 'yup'
 const jwtDecode = require('jwt-decode');
 
+
+toast.configure()
 const options = [
   { value: 'Sick', label: 'Sick Leave' },
   { value: 'Vacation', label: 'Vacation' },
@@ -33,7 +38,8 @@ class Dashboard extends Component {
       reason: '',
       additionalInfo: '',
       employeeId: '',
-      status: 'PENDING'
+      status: 'PENDING',
+      isSubmitting: false
     }
     this.onChange = this.onChange.bind(this)
     this.onChangeDate = this.onChangeDate.bind(this)
@@ -67,9 +73,17 @@ class Dashboard extends Component {
       employeeId: this.state.employeeId,
       status: this.state.status
     }
-    console.log(leave.date)
     request(leave).then(res => {
-      console.log(res)
+      if(res.status === 'Request Sent!'){
+        window.setTimeout(function () { window.location = "" }, 2000)
+                toast.success(res.status, {
+                    autoClose: 2000
+        })
+      }else if(res.error === 'Request on this date already exists'){
+        toast.warn(res.error, {
+          autoClose: 2000
+      })
+      }
     })
   }
   render() {
@@ -81,7 +95,25 @@ class Dashboard extends Component {
               <Card
                 title="Request a Leave"
                 content={
-                  <form noValidate onSubmit={this.onSubmit}>
+                  <Formik
+                  initialValues={{
+                    date:'',
+                    daysOff: '',
+                    reason: '',
+                  }}
+                  validationSchema={Yup.object({
+                    daysOff: Yup.number().required('Select Number of Days Off'),
+                    reason: Yup.string().oneOf(['Sick','Vacation','Hometime','Other'],'Select reason for Leave'),
+                    date: Yup.date()
+                  })}
+                  onSubmit={(values, {setSubmitting, resetForm}) =>{
+                    setTimeout(()=>{
+                      resetForm();
+                      setSubmitting(false);
+                    },2000)
+                  }}
+                  render={({ errors, status, touched }) => (
+                    <Form noValidate onSubmit={this.onSubmit}>
                     <Row>
                       <Col md={6}>
                       <ControlLabel>Select Date</ControlLabel>
@@ -98,6 +130,8 @@ class Dashboard extends Component {
                           value={this.state.daysOff}
                           onChange={this.onChange}
                         />
+                        {touched.daysOff && errors.daysOff && <div>{errors.daysOff}</div>}
+                        <ErrorMessage name="daysOff" component="div" className="invalid-feedback" />
                       </Col>
                     </Row>
                     <Row>
@@ -126,11 +160,13 @@ class Dashboard extends Component {
                         </FormGroup>
                       </Col>
                     </Row>
-                    <Button bsStyle="info" pullRight fill type="submit">
+                    <Button bsStyle="info" pullRight fill type="submit" disabled={this.state.isSubmitting}>
                       Request
                     </Button>
                     <div className="clearfix" />
-                  </form>
+                  </Form>
+                    )}>
+                  </Formik>
                 }
               />
             </Col>

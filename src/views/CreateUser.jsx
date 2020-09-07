@@ -26,7 +26,10 @@ class CreateUser extends Component {
     this.state = {
       addModalShow: false,
       name: '',
-      jobDescription: '',
+      jobTitle: '',
+      department: '',
+      email: '',
+      phone: '',
       username: '',
       password: '',
       daysAvailable: '',
@@ -50,14 +53,17 @@ class CreateUser extends Component {
     e.preventDefault()
     const user = {
       name: this.state.name,
-      jobDescription: this.state.jobDescription,
+      jobTitle: this.state.jobTitle,
+      department: this.state.department,
+      email: this.state.email,
+      phone: this.state.phone,
       username: this.state.username,
       password: this.state.password,
       daysAvailable: this.state.daysAvailable,
       typeOfUser: this.state.typeOfUser,
       status: this.state.status
     }
-   // this.setState({ addModalShow: true })
+    // this.setState({ addModalShow: true })
     register(user).then(res => {
       console.log(res)
     })
@@ -112,16 +118,54 @@ class CreateUser extends Component {
                       value={this.state.name}
                       onChange={this.onChange}
                     />
-                    <ControlLabel>Job description</ControlLabel>
-                    <FormControl
-                      rows="5"
-                      componentClass="textarea"
-                      bsClass="form-control"
-                      name="jobDescription"
-                      placeholder="Job Decription"
-                      value={this.state.jobDescription}
-                      onChange={this.onChange}
-                    />
+                    <Row>
+                      <Col md={6}>
+                        <ControlLabel>Email</ControlLabel>
+                        <input
+                          type="email"
+                          className="form-control"
+                          name="email"
+                          placeholder="Email"
+                          value={this.state.email}
+                          onChange={this.onChange}
+                        />
+                      </Col>
+                      <Col md={6}>
+                        <ControlLabel>Phone number</ControlLabel>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="phone"
+                          placeholder="Phone number"
+                          value={this.state.phone}
+                          onChange={this.onChange}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md={6}>
+                        <ControlLabel>Job title</ControlLabel>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="jobTitle"
+                          placeholder="Job Title"
+                          value={this.state.jobTitle}
+                          onChange={this.onChange}
+                        />
+                      </Col>
+                    </Row>
+                    <Col>
+                      <ControlLabel>Department</ControlLabel>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="department"
+                        placeholder="Department"
+                        value={this.state.department}
+                        onChange={this.onChange}
+                      />
+                    </Col>
                     <Row>
                       <Col md={6}>
                         <ControlLabel>Days</ControlLabel>
@@ -162,7 +206,7 @@ class CreateUser extends Component {
                   User Created
                 </Modal.Title>
               </Modal.Header>
-              
+
             </Modal>
           </Row>
         </Grid>

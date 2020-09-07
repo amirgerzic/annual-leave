@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { Grid, Row, Col } from "react-bootstrap";
 import DataTable from 'react-data-table-component';
-import Button from 'components/CustomButton/CustomButton'
 import ModalActionBox from "components/Modal/ModalActionBox"
 import Card from "components/Card/Card.jsx";
 import { requestDataById, deleteRequest } from "../components/UserFunctions/UserFunctions.js"
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const jwtDecode = require('jwt-decode');
-
+toast.configure()
 class Requests extends Component {
   constructor(props) {
     super(props);
@@ -29,9 +30,11 @@ class Requests extends Component {
   }
   onChangeDelete(e) {
     deleteRequest(e.target.id).then(res =>{
-      console.log(res)
-      window.location.reload(false)
+      toast.success(res, {
+        autoClose: 2000
     })
+    window.setTimeout(function () { window.location = "" }, 2000)
+  })
   }
 
 
@@ -95,13 +98,6 @@ class Requests extends Component {
                         sortable: true,
                         right: true,
                       },
-                      {
-                        name: 'Delete',
-                        selector: '_id',
-                        cell: row => <Button bsStyle="danger" id={row._id} onClick={this.onChangeDelete}>Delete</Button>,
-                        ignoreRowClick: true,
-                        button: true,
-                      }
                     ]}
                     data={this.state.requests}
                   />

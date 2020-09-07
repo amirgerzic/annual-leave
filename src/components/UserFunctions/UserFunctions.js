@@ -18,12 +18,15 @@ export const register = user => {
   return axios
     .post('/users/register', {
       name: user.name,
-      jobDescription: user.jobDescription,
+      jobTitle: user.jobTitle,
+      department: user.department,
+      email: user.email,
+      phone: user.phone,
       username: user.username,
       password: user.password,
       daysAvailable: user.daysAvailable,
       typeOfUser: user.typeOfUser,
-      status: user.status
+      daysUsed: user.daysUsed
     })
     .then(response => {
       return response.data
@@ -41,7 +44,7 @@ export const request = leave => {
       reason: leave.reason,
       additionalInfo: leave.additionalInfo,
       employeeId: leave.employeeId,
-      daysUsed: leave.daysUsed
+      status: leave.status
     })
     .then(response => {
       return response.data
@@ -54,7 +57,8 @@ export const status = update => {
   return axios
     .put('/requests/updateStatus', {
       _id: update._id,
-      status: update.status
+      status: update.status,
+      finalize: update.finalize
     })
     .then(response => {
       return response.data
@@ -68,8 +72,12 @@ export const updateUser = update => {
     .put('/users/updateUser', {
       _id: update._id,
       username: update.username,
+      password: update.password,
       name: update.name,
-      jobDescription: update.jobDescription,
+      jobTitle: update.jobTitle,
+      department: update.department,
+      email: update.email,
+      phone: update.phone,
       daysAvailable: update.daysAvailable,
       typeOfUser: update.typeOfUser
     })
@@ -100,6 +108,23 @@ export const userDataById = id => {
         _id: id
     })
     .then(res => res.json())
+    .catch(err => {
+      console.log(err)
+    })
+}
+
+export const requestData = id => {
+  console.log(id)
+  return axios
+    .get('/requests/requestData', {
+      params: {
+        status: id.status,
+        finalize: id.finalize
+      }
+    })
+    .then(res => {
+      return res.data}
+      )
     .catch(err => {
       console.log(err)
     })

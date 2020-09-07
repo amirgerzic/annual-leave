@@ -9,11 +9,10 @@ import Button from 'components/CustomButton/CustomButton'
 import { Card } from "components/Card/Card.jsx";
 import ModalForm from "components/Modal/ModalForm.jsx";
 import { deleteUser } from "components/UserFunctions/UserFunctions.js"
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-const options = [
-  { value: 'user', label: 'Employee' },
-  { value: 'hr', label: 'Human Resourses' }
-]
+toast.configure()
 class UserList extends Component {
   constructor(props) {
     super(props);
@@ -25,7 +24,7 @@ class UserList extends Component {
       name: '',
       username: '',
       password: '',
-      jobDescription: '',
+      jobTitle: '',
       daysAvailable: '',
       typeOfUser: ''
     };
@@ -33,21 +32,8 @@ class UserList extends Component {
     this.onChangeDelete = this.onChangeDelete.bind(this)
     this.onChangeModal = this.onChangeModal.bind(this)
     this.onChangeSelect = this.onChangeSelect.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit(e) {
-    e.preventDefault()
-    // const user = {
-    //     name: this.state.name,
-    //     jobDescription: this.state.jobDescription,
-    //     username: this.state.username,
-    //     password: this.state.password,
-    //     daysAvailable: this.state.daysAvailable,
-    //     typeOfUser: this.state.typeOfUser,
-    //     status: this.state.status
-    // }
-}
   onChangeModal(e) {
     this.setState({ selectedRow: e.target.id })
     this.setState({ addModalShow: true })
@@ -57,8 +43,10 @@ class UserList extends Component {
   }
   onChangeDelete(e) {
     deleteUser(e.target.id).then(res =>{
-      console.log(res)
-      window.location.reload(false)
+      toast.success(res, {
+        autoClose: 2000
+    })
+    window.setTimeout(function () { window.location = "" }, 2000)
     })
   }
   onChange(e) {
@@ -94,20 +82,20 @@ class UserList extends Component {
                         sortable: true,
                       },
                       {
-                        name: 'Job Desc',
-                        selector: 'jobDescription',
+                        name: 'Username',
+                        selector: 'username',
                         sortable: true,
                         right: true,
                       },
                       {
-                        name: 'Status',
-                        selector: 'status',
+                        name: 'Job Title',
+                        selector: 'jobTitle',
                         sortable: true,
                         right: true,
                       },
                       {
-                        name: 'Days Available',
-                        selector: 'daysAvailable',
+                        name: 'Type of User',
+                        selector: 'typeOfUser',
                         sortable: true,
                         right: true,
                       },

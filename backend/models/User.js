@@ -7,8 +7,17 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    jobDescription: {
+    jobTitle: {
         type: String,
+    },
+    department:{
+        type: String,
+    },
+    email:{
+        type: String
+    },
+    phone: {
+        type: Number
     },
     username: {
         type: String,

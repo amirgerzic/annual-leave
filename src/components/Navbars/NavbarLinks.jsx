@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { NavItem, Nav} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
+import { Button } from "semantic-ui-react";
+// import Button from "components/CustomButton/CustomButton.jsx"
 
 class NavbarLinks extends Component {
 
@@ -15,7 +17,7 @@ class NavbarLinks extends Component {
       <div>
         <Nav pullRight>
           <NavItem eventKey={1} onClick={this.logOut.bind(this)}>
-            Log out
+            <Button size="small" inverted circular color="blue">Log out</Button>
           </NavItem>  
         </Nav>
       </div>

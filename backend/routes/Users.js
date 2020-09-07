@@ -12,7 +12,10 @@ process.env.SECRET_KEY = 'secret'
 users.post('/register', (req, res) => {
   const userData = {
     name: req.body.name,
-    jobDescription: req.body.jobDescription,
+    jobTitle: req.body.jobTitle,
+    department: req.body.department,
+    email: req.body.email,
+    phone: req.body.phone,
     username: req.body.username,
     password: req.body.password,
     daysAvailable: req.body.daysAvailable,
@@ -48,24 +51,25 @@ users.post('/login', (req, res) => {
     username: req.body.username
   })
     .then(user => {
-      console.log(req.body.username)
       if (user) {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           const payload = {
             _id: user._id,
             name: user.name,
             username: user.username,
-            typeOfUser: user.typeOfUser
+            typeOfUser: user.typeOfUser,
+            daysAvailable: user.daysAvailable,
+            daysUsed: user.daysUsed
           }
           let token = jwt.sign(payload, process.env.SECRET_KEY, {
             expiresIn: 600
           })
           res.send(token)
         } else {
-          res.json({ error: 'User does not exist' })
+          res.json({ error: 'Wrong username or password' })
         }
       } else {
-        res.json({ error: 'User does not exist' })
+        res.json({ error: 'Wrong username or password' })
       }
     })
     .catch(err => {
@@ -122,7 +126,6 @@ users.get('/userDataById', (req, res) => {
 })
 
 users.delete('/delete', (req, res) => {
-  console.log(req.query._id)
   User.findByIdAndDelete({
     _id: req.query._id
   })
@@ -155,18 +158,26 @@ users.put('/updateUser', (req, res) => {
     const updateData = {
       $set: {
         username: req.body.username,
+        password: req.body.password,
         name: req.body.name,
-        jobDescription: req.body.jobDescription,
+        jobTitle: req.body.jobTitle,
+        department: req.body.department,
+        email: req.body.email,
+        phone: req.body.phone,
         daysAvailable: req.body.daysAvailable,
         typeOfUser: req.body.typeOfUser
       }
     }
-    User.findByIdAndUpdate(req.body._id, updateData)
-      .then(user => {
-        res.send({ status: user.username + ' Updated!' })
-      }).catch(err => {
-        res.send('error: ' + err)
-      })
+    console.log(req.body.password)
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+      updateData.password = hash
+      User.findByIdAndUpdate(req.body._id, updateData)
+        .then(user => {
+          res.send({ status:'Account Updated!' })
+        }).catch(err => {
+          res.send('error: ' + err)
+        })
+    })
   })
 })
 
@@ -176,10 +187,12 @@ users.put('/updateDaysAvailable', (req, res) => {
   }).then(user => {
     if (req.body.status === 'APPROVED') {
       if (user.daysAvailable >= req.body.daysOff) {
+        const available = parseInt(user.daysAvailable) - parseInt(req.body.daysOff)
+        const used = parseInt(user.daysUsed) + parseInt(req.body.daysOff)
         const updateData = {
           $set: {
-            daysAvailable: user.daysAvailable - req.body.daysOff,
-            daysUsed: user.daysUsed + req.body.daysOff
+            daysAvailable: available,
+            daysUsed: used
           }
         }
         User.findByIdAndUpdate(req.body._id, updateData)
@@ -191,10 +204,12 @@ users.put('/updateDaysAvailable', (req, res) => {
       }
     } else if (req.body.status === 'DENIED') {
       if (user.daysUsed >= req.body.daysOff) {
+        const available = parseInt(user.daysAvailable) + parseInt(req.body.daysOff)
+        const used = parseInt(user.daysUsed) - parseInt(req.body.daysOff)
         const updateData = {
           $set: {
-            daysAvailable: user.daysAvailable + req.body.daysOff,
-            daysUsed: user.daysUsed - req.body.daysOff
+            daysAvailable: available,
+            daysUsed: used
           }
         }
         User.findByIdAndUpdate(req.body._id, updateData)

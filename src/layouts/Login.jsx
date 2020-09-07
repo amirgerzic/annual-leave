@@ -11,13 +11,17 @@ import {
 
 import { Card } from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const jwtDecode = require('jwt-decode');
 
+toast.configure()
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      color: "blue",
       username: '',
       password: '',
     };
@@ -36,16 +40,20 @@ class Login extends Component {
       password: this.state.password
     }
     login(user).then(res => {
-      const token = localStorage.getItem('usertoken')
       console.log(res.error)
+      if (res.error ==="Wrong username or password") {
+        toast.warn(res.error, {
+          autoClose: 3000
+        })
+      }
+      const token = localStorage.getItem('usertoken')
       if (res.error === undefined) {
         var decoded = jwtDecode(token)
-        console.log(decoded)
-        if(decoded.typeOfUser === 'user'){
+        if (decoded.typeOfUser === 'user') {
           this.props.history.push('/user')
-        }else if(decoded.typeOfUser === 'admin'){
+        } else if (decoded.typeOfUser === 'admin') {
           this.props.history.push('/admin')
-        }else if(decoded.typeOfUser === 'hr'){
+        } else if (decoded.typeOfUser === 'hr') {
           this.props.history.push('/hr')
         }
       }
@@ -60,7 +68,7 @@ class Login extends Component {
             <Row>
               <Col mdOffset={4} md={4} className="justify-content-md-center">
                 <Card
-                  title="Request a Leave"
+                  title="Login"
                   content={
                     <form noValidate onSubmit={this.onSubmit}>
                       <ControlLabel>Username</ControlLabel>

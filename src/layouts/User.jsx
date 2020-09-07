@@ -53,18 +53,9 @@ class User extends Component {
         return routes[i].name;
       }
     }
-    return "Brand";
+    return null;
   };
-  handleImageClick = image => {
-    this.setState({ image: image });
-  };
-  handleColorClick = color => {
-    this.setState({ color: color });
-  };
-  handleHasImage = hasImage => {
-    this.setState({ hasImage: hasImage });
-  };
-
+  
   render() {
     return (
       <div className="wrapper">

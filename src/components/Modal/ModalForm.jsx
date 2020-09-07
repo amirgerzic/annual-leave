@@ -9,7 +9,10 @@ import {
 import Button from "components/CustomButton/CustomButton";
 import Select from 'react-select'
 import { updateUser } from "components/UserFunctions/UserFunctions.js"
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
+toast.configure()
 const options = [
     { value: 'user', label: 'Employee' },
     { value: 'hr', label: 'Human Resourses' }
@@ -19,7 +22,10 @@ class ModalForm extends Component {
         super(props);
         this.state = {
             name: '',
-            jobDescription: '',
+            jobTitle: '',
+            department: '',
+            email: '',
+            phone: '',
             username: '',
             password: '',
             daysAvailable: '',
@@ -44,12 +50,15 @@ class ModalForm extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({name: nextProps.data.name})
-        this.setState({username: nextProps.data.username})
-        this.setState({password: nextProps.data.password})
-        this.setState({jobDescription: nextProps.data.jobDescription})
-        this.setState({daysAvailable: nextProps.data.daysAvailable})
-        this.setState({typeOfUser: nextProps.data.typeOfUser})
+        this.setState({ name: nextProps.data.name })
+        this.setState({ username: nextProps.data.username })
+        this.setState({ password: nextProps.data.password })
+        this.setState({ jobTitle: nextProps.data.jobTitle })
+        this.setState({ department: nextProps.data.department })
+        this.setState({ email: nextProps.data.email })
+        this.setState({ phone: nextProps.data.phone})
+        this.setState({ daysAvailable: nextProps.data.daysAvailable })
+        this.setState({ typeOfUser: nextProps.data.typeOfUser })
     }
 
     onSubmit(e) {
@@ -57,15 +66,22 @@ class ModalForm extends Component {
         const user = {
             _id: this.props.data._id,
             name: this.state.name,
-            jobDescription: this.state.jobDescription,
+            jobTitle: this.state.jobTitle,
+            department: this.state.department,
+            email: this.state.email,
+            phone: this.state.phone,
             username: this.state.username,
             password: this.state.password,
             daysAvailable: this.state.daysAvailable,
             typeOfUser: this.state.typeOfUser,
         }
         updateUser(user).then(res => {
-            console.log(res)
-            window.location.reload(false)
+            if (res.status === "Account Updated!") {
+                toast.success(res.status, {
+                    autoClose: 2000
+                })
+                window.setTimeout(function () { window.location = "" }, 2000)
+            }
         })
     }
 
@@ -100,19 +116,16 @@ class ModalForm extends Component {
                                 />
                             </Col>
                             <Col md={6}>
-                                <ControlLabel>Password</ControlLabel>
+                                <ControlLabel>New Password</ControlLabel>
                                 <input
                                     type="password"
                                     className="form-control"
                                     name="password"
                                     placeholder="Password"
-                                    value={this.state.password}
                                     onChange={this.onChange}
                                 />
                             </Col>
                         </Row>
-
-
                         <ControlLabel>Name</ControlLabel>
                         <input
                             type="text"
@@ -122,16 +135,52 @@ class ModalForm extends Component {
                             value={this.state.name}
                             onChange={this.onChange}
                         />
-                        <ControlLabel>Job description</ControlLabel>
-                        <FormControl
-                            rows="5"
-                            componentClass="textarea"
-                            bsClass="form-control"
-                            name="jobDescription"
-                            placeholder="Job Decription"
-                            value={this.state.jobDescription}
-                            onChange={this.onChange}
-                        />
+                        <Row>
+                            <Col md={6}>
+                                <ControlLabel>Email</ControlLabel>
+                                <input
+                                    type="email"
+                                    className="form-control"
+                                    name="email"
+                                    placeholder="Email"
+                                    value={this.state.email}
+                                    onChange={this.onChange}
+                                />
+                            </Col>
+                            <Col md={6}>
+                                <ControlLabel>Phone Number</ControlLabel>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    name="phone"
+                                    placeholder="phone"
+                                    value={this.state.phone}
+                                    onChange={this.onChange}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
+                                <ControlLabel>Job TItle</ControlLabel>
+                                <input
+                                    className="form-control"
+                                    name="jobTitle"
+                                    placeholder="Job Title"
+                                    value={this.state.jobTitle}
+                                    onChange={this.onChange}
+                                />
+                            </Col>
+                        </Row>
+                        <Col >
+                            <ControlLabel>Department</ControlLabel>
+                            <input
+                                className="form-control"
+                                name="department"
+                                placeholder="Department"
+                                value={this.state.department}
+                                onChange={this.onChange}
+                            />
+                        </Col>
                         <Row>
                             <Col md={6}>
                                 <ControlLabel>Days</ControlLabel>

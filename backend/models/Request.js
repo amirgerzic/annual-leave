@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { boolean } = require("yup")
 const Schema = mongoose.Schema
 
 const RequestSchema = new Schema({
@@ -27,6 +28,10 @@ const RequestSchema = new Schema({
     },
     status: {
         type: String,
+        required: true
+    },
+    finalize: {
+        type: Number,
         required: true
     }
 })

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import NavbarLinks from "../Navbars/NavbarLinks.jsx";
 
-import logo from "assets/img/reactlogo.png";
+import logo from "assets/img/vacation.png";
 
 const jwtDecode = require('jwt-decode');
 
@@ -36,16 +36,15 @@ class Sidebar extends Component {
         data-image={this.props.image}
       >
           {this.props.hasImage ? (
-            <div className="sidebar-background" style={sidebarBackground} />
+            <div className="sidebar-background" />
           ) : (
             null
           )}
         <div className="logo">
           <a
-            href="https://www.creative-tim.com?ref=lbd-sidebar"
             className="simple-text logo-mini"
           >
-            <div className="logo-img">
+             <div className="logo-img">
               <img src={logo} alt="logo_image" />
             </div>
           </a>

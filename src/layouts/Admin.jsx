@@ -48,16 +48,7 @@ class Admin extends Component {
         return routes[i].name;
       }
     }
-    return "Brand";
-  };
-  handleImageClick = image => {
-    this.setState({ image: image });
-  };
-  handleColorClick = color => {
-    this.setState({ color: color });
-  };
-  handleHasImage = hasImage => {
-    this.setState({ hasImage: hasImage });
+    return null;
   };
 
   render() {
