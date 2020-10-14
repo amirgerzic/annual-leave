@@ -29,6 +29,7 @@ class Header extends Component {
   }
   render() {
     if(!localStorage.usertoken){
+      console.log(localStorage.usertoken)
       this.props.history.push('/login')
     }
     return (

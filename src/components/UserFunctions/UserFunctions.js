@@ -36,6 +36,7 @@ export const register = user => {
     })
 }
 export const request = leave => {
+  console.log(leave.name)
   return axios
     .post('/requests/request', {
       date: leave.date,
@@ -89,6 +90,7 @@ export const updateUser = update => {
     })
 }
 export const daysAvailable = update => {
+  console.log(update.daysOff)
   return axios
     .put('/users/updateDaysAvailable', {
       _id: update._id,
@@ -105,16 +107,19 @@ export const daysAvailable = update => {
 export const userDataById = id => {
   return axios
     .get('/users/userDataById', {
+      params:{
         _id: id
+      }
     })
-    .then(res => res.json())
+    .then(res => {
+      return res.data
+    })
     .catch(err => {
       console.log(err)
     })
 }
 
 export const requestData = id => {
-  console.log(id)
   return axios
     .get('/requests/requestData', {
       params: {
@@ -162,11 +167,12 @@ export const deleteRequest = id => {
     })
 }
 
-export const requestDataById = id => {
+export const requestDataById = data => {
   return axios
     .get('/requests/requestDataByEmployeeId',  {
       params:{
-        employeeId: id
+        employeeId: data.employeeId,
+        status: data.status
       }
     })
     .then(response => {

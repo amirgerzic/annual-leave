@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Navbar } from "react-bootstrap";
+import logo from "assets/img/vacation.png";
 
 class Header extends Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class Header extends Component {
     document.documentElement.classList.toggle("nav-open");
     var node = document.createElement("div");
     node.id = "bodyClick";
-    node.onclick = function() {
+    node.onclick = function () {
       this.parentElement.removeChild(this);
       document.documentElement.classList.toggle("nav-open");
     };
@@ -30,9 +31,11 @@ class Header extends Component {
       <Navbar fluid>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="#pablo">{this.props.brandText}</a>
+              <img src={logo} size={40} alt="logo_image" />
+       </Navbar.Brand>
+          <Navbar.Brand>
+              <h1 style={{color: '#1DC7EA'}}>AnnualLeave</h1>
           </Navbar.Brand>
-          <Navbar.Toggle onClick={this.mobileSidebarToggle} />
         </Navbar.Header>
         <Navbar.Collapse>
         </Navbar.Collapse>

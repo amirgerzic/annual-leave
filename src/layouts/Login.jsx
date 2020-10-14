@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import { login } from "../components/UserFunctions/UserFunctions.js"
-import LoginNavbar from "components/Navbars/LoginNavbar";
 import {
   Grid,
   Row,
@@ -9,10 +8,11 @@ import {
   ControlLabel,
 } from "react-bootstrap";
 
-import { Card } from "components/Card/Card.jsx";
+import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import logo from "assets/img/vacation.png";
 
 const jwtDecode = require('jwt-decode');
 
@@ -40,8 +40,7 @@ class Login extends Component {
       password: this.state.password
     }
     login(user).then(res => {
-      console.log(res.error)
-      if (res.error ==="Wrong username or password") {
+      if (res.error === "Wrong username or password") {
         toast.warn(res.error, {
           autoClose: 3000
         })
@@ -60,16 +59,31 @@ class Login extends Component {
     })
   }
   render() {
+    const sidebarBackground = {
+      backgroundImage: "url(" + this.props.image + ")"
+    };
     return (
-      <div className="wrapper">
-        <LoginNavbar></LoginNavbar>
+      <div className="wrapper-login" style={sidebarBackground}>
+        {/* <LoginNavbar></LoginNavbar> */}
         <div className="content">
           <Grid fluid>
             <Row>
               <Col mdOffset={4} md={4} className="justify-content-md-center">
+                <br></br>
+                <Row>
+                  <Col md={2}>
+                  <img src={logo} width={60} height={60}  alt="logo_image" />
+                  </Col>
+                  <Col md={6}>
+                  <h1 style={{textAlign:"center", color:"white", fontSize: "50px"}}>AnnualLeave</h1>
+                  </Col>
+                </Row>
+                <br></br>
                 <Card
-                  title="Login"
-                  content={
+                 
+                  hCenter
+                  content={<div>
+                    <h3 style={{textAlign:"center", color:"grey", fontSize: "20px"}}>Login</h3>
                     <form noValidate onSubmit={this.onSubmit}>
                       <ControlLabel>Username</ControlLabel>
                       <input
@@ -91,11 +105,11 @@ class Login extends Component {
                         onChange={this.onChange}
                       />
                       <br></br>
-                      <Button bsStyle="info" pullRight fill type="submit">
+                      <Button name="login" bsStyle="info" pullRight fill type="submit">
                         Login
                     </Button>
                       <div className="clearfix" />
-                    </form>
+                    </form></div>
                   }
                 /></Col>
             </Row>

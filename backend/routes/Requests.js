@@ -19,7 +19,9 @@ requests.post('/request', (req, res) => {
   Request.findOne({
     employeeId: req.body.employeeId
   }).then(employeeId => {
+    console.log(req.body.employeeId)
     if (employeeId) {
+      console.log(req.body.employeeId)
       Request.findOne({
         date: req.body.date
       }).then(date => {
@@ -43,6 +45,14 @@ requests.post('/request', (req, res) => {
           res.json({ error: 'Request on this date already exists' })
         }
       })
+    } else {
+      Request.create(requestData)
+        .then(request => {
+          res.json({ status: 'Request Sent!' })
+        })
+        .catch(err => {
+          res.send('error: ' + err)
+        })
     }
   }).catch(err => {
     res.send('error: ' + err)
@@ -84,6 +94,24 @@ requests.get('/requestData', (req, res) => {
 requests.get('/requestDataByEmployeeId', (req, res) => {
   Request.find({
     employeeId: req.query.employeeId,
+    status: req.query.status
+  })
+    .then(request => {
+      console.log(request)
+      if (request) {
+        res.json(request)
+      } else {
+        res.send('Request does not exist')
+      }
+    })
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+})
+
+requests.get('/requestDataByEmployeeIdApp', (req, res) => {
+  Request.find({
+    //employeeId: req.query.employeeId,
   })
     .then(request => {
       if (request) {
@@ -111,14 +139,15 @@ requests.put('/updateStatus', (req, res) => {
         })
     }
     else if (request.status === req.body.status) {
-      if(req.body.finalize==1){
-      Request.findByIdAndUpdate(req.body._id, updateData)
-        .then(_id => {
-          res.send('Request Finalized')
-        })}
-        else{
-          res.send('Request already '+request.status)
-        }
+      if (req.body.finalize == 1) {
+        Request.findByIdAndUpdate(req.body._id, updateData)
+          .then(_id => {
+            res.send('Request Finalized')
+          })
+      }
+      else {
+        res.send('Request already ' + request.status)
+      }
     } else (
       Request.findByIdAndUpdate(req.body._id, updateData)
         .then(_id => {

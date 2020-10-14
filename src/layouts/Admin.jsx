@@ -4,11 +4,10 @@ import { Route, Switch } from "react-router-dom";
 import Navbar from "components/Navbars/Navbar";
 import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
-
 import routes from "routes.js";
+import image from "assets/img/sidebar-4.jpg";
 
-import image from "assets/img/sidebar-3.jpg";
-
+const jwtDecode = require('jwt-decode');
 class Admin extends Component {
   constructor(props) {
     super(props);
@@ -18,10 +17,14 @@ class Admin extends Component {
       hasImage: true,
     };
   }
-   
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.layout === '/admin') {
+        const token = localStorage.getItem('usertoken')
+      var decoded = jwtDecode(token)
+      if(prop.layout !== "/"+decoded.typeOfUser){
+        this.props.history.push('/404')
+      }
         return (
           <Route
           path={prop.layout + prop.path}

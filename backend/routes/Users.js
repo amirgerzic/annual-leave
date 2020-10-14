@@ -20,7 +20,7 @@ users.post('/register', (req, res) => {
     password: req.body.password,
     daysAvailable: req.body.daysAvailable,
     typeOfUser: req.body.typeOfUser,
-    daysUsed: req.body.daysUsed
+    daysUsed: 0
   }
   User.findOne({
     username: req.body.username
@@ -31,7 +31,7 @@ users.post('/register', (req, res) => {
           userData.password = hash
           User.create(userData)
             .then(user => {
-              res.json({ status: user.username + ' Registered!' })
+              res.json({ status: 'User Created!' })
             })
             .catch(err => {
               res.send('error: ' + err)
@@ -110,10 +110,9 @@ users.get('/userDataAll', (req, res) => {
 
 users.get('/userDataById', (req, res) => {
   User.findById({
-    _id: req.body._id
+    _id: req.query._id
   })
     .then(user => {
-      console.log(req.body._id)
       if (user) {
         res.json(user)
       } else {
@@ -168,7 +167,6 @@ users.put('/updateUser', (req, res) => {
         typeOfUser: req.body.typeOfUser
       }
     }
-    console.log(req.body.password)
     bcrypt.hash(req.body.password, 10, (err, hash) => {
       updateData.password = hash
       User.findByIdAndUpdate(req.body._id, updateData)
@@ -185,9 +183,13 @@ users.put('/updateDaysAvailable', (req, res) => {
   User.findById({
     _id: req.body._id
   }).then(user => {
+    console.log(req.body.status)
     if (req.body.status === 'APPROVED') {
+      console.log(user.daysAvailable, req.body.daysOff)
       if (user.daysAvailable >= req.body.daysOff) {
+        console.log(req.body.daysOff)
         const available = parseInt(user.daysAvailable) - parseInt(req.body.daysOff)
+        console.log(available)
         const used = parseInt(user.daysUsed) + parseInt(req.body.daysOff)
         const updateData = {
           $set: {

@@ -4,6 +4,12 @@ body,
     min-height: 100vh;
     position: relative;
     background-color: white;
+    background-image: none;
+}
+.wrapper-login{
+    min-height: 100vh;
+    position: relative;
+    background-color: lightblue;
 }
 a{
   color: $info-color;

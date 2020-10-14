@@ -7,17 +7,24 @@ import 'semantic-ui-css/semantic.min.css'
 import { status, daysAvailable } from "components/UserFunctions/UserFunctions.js"
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import BlockUi from 'react-block-ui';
+import 'react-block-ui/style.css';
 
 toast.configure()
 class ModalForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            blocking: false,
             finalize: 0
         };
         this.onChange = this.onChange.bind(this)
         this.onFinalize = this.onFinalize.bind(this)
+        this.toggleBlocking = this.toggleBlocking.bind(this)
     }
+    toggleBlocking() {
+        this.setState({blocking: !this.state.blocking});
+      }
     onFinalize(e){
         this.setState({finalize: e.target.value})
     }
@@ -34,21 +41,26 @@ class ModalForm extends Component {
         }
         status(update).then(res => {
             if (res === "Request Updated") {
+                this.toggleBlocking()
                 toast.success(res, {
-                    autoClose: 2000
+                    autoClose: 2000,
+                    position: "top-center",
                 })
                 daysAvailable(data).then(res => {
+                    console.log(res.data)
                 })
                 window.setTimeout(function () { window.location = "" }, 2000)
             } else if(res ==="Request Finalized"){
                 toast.success(res, {
-                    autoClose: 2000
+                    autoClose: 2000,
+                    position: "top-center",
                 })
                 window.setTimeout(function () { window.location = "" }, 2000)
             }
             else{
                 toast.warn(res, {
-                    autoClose:2000
+                    autoClose:2000,
+                    position: "top-center",
                 })
             }
         })
@@ -62,6 +74,7 @@ class ModalForm extends Component {
                 keyboard={false}
                 aria-labelledby="example-modal-sizes-title-sm"
             >
+                <BlockUi tag="div" blocking={this.state.blocking}>
                 <Modal.Header closeButton>
                     <Modal.Title id="example-modal-sizes-title-sm">
                         Update Request
@@ -81,11 +94,13 @@ class ModalForm extends Component {
                             <Checkbox
                                 number="1"
                                 value="1"
+                                isChecked={false}
                                 onClick={this.onFinalize}
                                 label=" Finalize status"
                             /></Col>
                     </Row>
                 </Modal.Body>
+                </BlockUi>
             </Modal>
         )
     }

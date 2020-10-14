@@ -10,7 +10,9 @@ import { style } from "variables/Variables.jsx";
 
 import routes from "routes.js";
 
-import image from "assets/img/sidebar-3.jpg";
+import image from "assets/img/sidebar-4.jpg";
+
+const jwtDecode = require('jwt-decode');
 
 class User extends Component {
   constructor(props) {
@@ -26,6 +28,11 @@ class User extends Component {
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.layout === "/user") {
+        const token = localStorage.getItem('usertoken')
+      var decoded = jwtDecode(token)
+      if(prop.layout !== "/"+decoded.typeOfUser){
+        this.props.history.push('/404')
+      }
         return (
           <Route
             path={prop.layout + prop.path}

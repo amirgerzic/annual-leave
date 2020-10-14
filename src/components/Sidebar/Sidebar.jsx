@@ -36,12 +36,12 @@ class Sidebar extends Component {
         data-image={this.props.image}
       >
           {this.props.hasImage ? (
-            <div className="sidebar-background" />
+            <div className="sidebar-background" style={sidebarBackground} />
           ) : (
             null
           )}
         <div className="logo">
-          <a
+          <a href="logo"
             className="simple-text logo-mini"
           >
              <div className="logo-img">
@@ -53,16 +53,16 @@ class Sidebar extends Component {
           >
             Annual Leave
           </div>
-        </div>
+</div>
         <div className="sidebar-wrapper">
           <ul className="nav">
             {this.state.width <= 991 ? <NavbarLinks /> : null}
             {this.props.routes.map((prop, key) => {
               if (!prop.redirect){
+                if(localStorage.usertoken){
                 const token = localStorage.getItem('usertoken')
                 var decoded = jwtDecode(token)
-                
-                if(prop.layout === "/"+decoded.typeOfUser){
+                if(prop.layout.includes("/"+decoded.typeOfUser)){
                   return (
                   <li key={key}>
                     <NavLink
@@ -75,7 +75,10 @@ class Sidebar extends Component {
                     </NavLink>
                   </li>
                 );}
-                
+                   }
+                   else{
+                     this.props.history.push('/login')
+                   }
               }
               return null;
             })}

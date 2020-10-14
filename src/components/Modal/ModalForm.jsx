@@ -3,7 +3,6 @@ import {
     Modal,
     Row,
     Col,
-    FormControl,
     ControlLabel
 } from "react-bootstrap";
 import Button from "components/CustomButton/CustomButton";
@@ -11,6 +10,8 @@ import Select from 'react-select'
 import { updateUser } from "components/UserFunctions/UserFunctions.js"
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import BlockUi from 'react-block-ui';
+import 'react-block-ui/style.css';
 
 toast.configure()
 const options = [
@@ -21,6 +22,7 @@ class ModalForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            blocking: false,
             name: '',
             jobTitle: '',
             department: '',
@@ -34,19 +36,17 @@ class ModalForm extends Component {
         this.onChange = this.onChange.bind(this)
         this.onChangeSelect = this.onChangeSelect.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.toggleBlocking = this.toggleBlocking.bind(this)
     }
-
+    toggleBlocking() {
+        this.setState({blocking: !this.state.blocking});
+      }
     onChange(e) {
         this.setState({ [e.target.name]: e.target.value })
-        console.log(this.props.data._id)
     }
 
     onChangeSelect(e) {
         this.setState({ typeOfUser: e.value })
-        //  console.log(this.state.name)
-        //  userDataById(user).then(res => {
-        //      console.log(res.data)
-        //  })
     }
 
     componentWillReceiveProps(nextProps) {
@@ -75,10 +75,12 @@ class ModalForm extends Component {
             daysAvailable: this.state.daysAvailable,
             typeOfUser: this.state.typeOfUser,
         }
+        this.toggleBlocking()
         updateUser(user).then(res => {
             if (res.status === "Account Updated!") {
                 toast.success(res.status, {
-                    autoClose: 2000
+                    autoClose: 2000,
+                    position: "top-center",
                 })
                 window.setTimeout(function () { window.location = "" }, 2000)
             }
@@ -95,6 +97,7 @@ class ModalForm extends Component {
                 keyboard={false}
                 aria-labelledby="example-modal-sizes-title-sm"
             >
+                <BlockUi tag="div" blocking={this.state.blocking}>
                 <Modal.Header closeButton>
                     <Modal.Title id="example-modal-sizes-title-sm">
                         Update Request
@@ -209,6 +212,7 @@ class ModalForm extends Component {
                         <div className="clearfix" />
                     </form>
                 </Modal.Body>
+                </BlockUi>
             </Modal>
         )
     }

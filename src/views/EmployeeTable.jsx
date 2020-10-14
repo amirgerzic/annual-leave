@@ -12,10 +12,10 @@ class EmployeeTable extends Component {
       selectedEmployee: ''
     }
     this.onChange = this.onChange.bind(this)
+    this.SampleExpandedComponent = this.SampleExpandedComponent.bind(this)
   }
   onChange(e) {
     this.setState({ selectedRow: e.target.id })
-    console.log(e.target.id)
   }
   async componentDidMount() {
     const url = "/users/userData"
@@ -23,8 +23,17 @@ class EmployeeTable extends Component {
     const data = await response.json()
     this.setState({ employees: data })
   }
+   SampleExpandedComponent = () => (
+      <p>
+        {this.state.selectedEmployee.email}
+      </p>
+  );
   render() {
-
+    const SampleExpandedComponent = () => (
+      <p>
+        {this.state.selectedRow}
+      </p>
+  );
     return (
       <div className="content">
         <Grid fluid>
@@ -52,25 +61,43 @@ class EmployeeTable extends Component {
                         name: 'Job Title',
                         selector: 'jobTitle',
                         sortable: true,
-                        right: true,
+                        center: true,
+                      },
+                      {
+                        name: 'Department',
+                        selector: 'department',
+                        sortable: true,
+                        center: true,
+                      },
+                      {
+                        name: 'Email',
+                        selector: 'email',
+                        sortable: true,
+                        center: true,
+                      },
+                      {
+                        name: 'Phone Number',
+                        selector: 'phone',
+                        sortable: true,
+                        center: true,
                       },
                       {
                         name: 'Days Available',
                         selector: 'daysAvailable',
                         sortable: true,
-                        right: true,
+                        center: true,
                       },
                       {
                         name: 'Days Used',
                         selector: 'daysUsed',
                         sortable: true,
-                        right: true,
+                        center: true,
                       }
                     ]}
                     data={this.state.employees}
                     // selectableRows
-                    // expandableRows
-                    // expandableRowsComponent={<Table id={this.state.selectedRow}></Table>}
+                     expandableRows
+                     expandableRowsComponent={<SampleExpandedComponent />}
                   />
                 }
               />

@@ -9,6 +9,7 @@ const UserSchema = new Schema({
     },
     jobTitle: {
         type: String,
+        required: true
     },
     department:{
         type: String,
@@ -28,7 +29,8 @@ const UserSchema = new Schema({
         required: true
     },
     daysAvailable: {
-        type: Number
+        type: Number,
+        required: true
     },
     typeOfUser: {
         type: String,

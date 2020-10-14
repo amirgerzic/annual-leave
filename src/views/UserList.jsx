@@ -44,7 +44,8 @@ class UserList extends Component {
   onChangeDelete(e) {
     deleteUser(e.target.id).then(res =>{
       toast.success(res, {
-        autoClose: 2000
+        autoClose: 2000,
+        position: "top-center",
     })
     window.setTimeout(function () { window.location = "" }, 2000)
     })
@@ -102,7 +103,7 @@ class UserList extends Component {
                       {
                         name: 'Action',
                         selector: '_id',
-                        cell: row => <Button bsStyle="info" id={row._id} onClick={this.onChangeModal}>Edit</Button>,
+                        cell: row => <Button fill bsStyle="info" id={row._id} onClick={this.onChangeModal}>Edit</Button>,
                         ignoreRowClick: true,
                         allowOverflow: true,
                         button: true,
@@ -110,7 +111,7 @@ class UserList extends Component {
                       {
                         name: 'Delete',
                         selector: '_id',
-                        cell: row => <Button bsStyle="danger" id={row._id} onClick={this.onChangeDelete}>Delete</Button>,
+                        cell: row => <Button fill bsStyle="danger" id={row._id} onClick={this.onChangeDelete}>Delete</Button>,
                         ignoreRowClick: true,
                         button: true,
                       },
